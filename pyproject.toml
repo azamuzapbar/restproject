@@ -11,6 +11,7 @@ django = "^4.2.2"
 djangorestframework = "^3.14.0"
 django-phonenumber-field = {extras = ["phonenumberslite"], version = "^7.1.0"}
 phonenumbers = "^8.13.13"
+drf-spectacular = "^0.26.2"
 
 
 [build-system]

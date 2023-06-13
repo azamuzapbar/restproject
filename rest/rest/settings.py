@@ -12,12 +12,11 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 import os.path
 from datetime import timedelta
 from pathlib import Path
-# import django_heroku
 import dj_database_url
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
@@ -28,7 +27,7 @@ SECRET_KEY = 'django-insecure-e%j@a&gk)xegm776t6z)xhu)&fyf35t_4x7ltdlw-2z^x1mmzz
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['restaurant.com']
+ALLOWED_HOSTS = []
 
 REST_FRAMEWORK = {
     # YOUR SETTINGS
@@ -38,7 +37,6 @@ REST_FRAMEWORK = {
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     )
 }
-
 
 SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME": timedelta(minutes=5),
@@ -103,7 +101,7 @@ INSTALLED_APPS = [
     'users',
     'restaurant',
     "phonenumbers",
-    'drf_spectacular'
+    'drf_spectacular',
 ]
 
 MIDDLEWARE = [
@@ -114,6 +112,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
 ]
 
 ROOT_URLCONF = 'rest.urls'
@@ -136,21 +135,18 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'rest.wsgi.application'
 
-
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
 DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.postgresql",
-        "NAME": "rest",
-        "USER": "azat",
-        "PASSWORD": "12345",
-        "HOST": "localhost",
-        "PORT": "",
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
 
+db_from_env = dj_database_url.config(conn_max_age=600, default='sqlite:///db.sqlite3')
+DATABASES['default'].update(db_from_env)
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
@@ -170,7 +166,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/
 
@@ -182,7 +177,6 @@ USE_I18N = True
 
 USE_TZ = True
 
-
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
@@ -191,9 +185,6 @@ LOGOUT_REDIRECT_URL = 'login'
 LOGIN_URL = 'login'
 
 STATIC_URL = 'static/'
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
-STATICFILES_DIRS = (os.path.join(BASE_DIR, 'static'),)
-# django_heroku.settings(locals())
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
